@@ -1,0 +1,60 @@
+{
+  "haberler": {
+    "haber1": {
+      "id": "haber1",
+      "baslik": "İEU, Uluslararası Akreditasyon Aldı",
+      "ozet": "Üniversitemiz, AACSB akreditasyonu ile dünya çapında tanınan prestijli üniversiteler arasına katıldı.",
+      "icerik": "İzmir Ekonomi Üniversitesi, işletme ve yönetim alanında dünya çapında en prestijli akreditasyon kuruluşlarından biri olan AACSB (Association to Advance Collegiate Schools of Business) akreditasyonunu almaya hak kazandı. Bu başarı ile üniversitemiz, dünya çapında sadece %5'lik bir kesimin sahip olduğu bu prestijli akreditasyona sahip oldu.",
+      "gorselUrl": "https://www.ieu.edu.tr/images/news/aacsb-akreditasyon.jpg",
+      "kategori": "Akademik",
+      "yazar": "İEU Basın Merkezi",
+      "olusturmaTarihi": "2024-01-20T09:00:00Z",
+      "link": "/haberler/ieu-aacsb-akreditasyon",
+      "onemli": true,
+      "topics": ["ieu_stu", "anonim", "aday_stu"],
+      "okunmaSayisi": 1250
+    },
+    "haber2": {
+      "id": "haber2",
+      "baslik": "Yeni Araştırma Merkezi Açıldı",
+      "ozet": "Yapay Zeka ve Veri Bilimi Araştırma Merkezi, teknoloji alanında yenilikçi projeler geliştirmek üzere faaliyete başladı.",
+      "icerik": "İzmir Ekonomi Üniversitesi bünyesinde kurulan Yapay Zeka ve Veri Bilimi Araştırma Merkezi, hem akademik hem de endüstriyel projelerde öncü çalışmalar yürütecek. Merkez, öğrencilerimizin de aktif olarak yer alacağı projeler ile hem teorik hem de pratik deneyim kazanmalarını sağlayacak.",
+      "gorselUrl": "https://www.ieu.edu.tr/images/news/ai-research-center.jpg",
+      "kategori": "Araştırma",
+      "yazar": "Prof. Dr. Mehmet Özkan",
+      "olusturmaTarihi": "2024-01-18T14:30:00Z",
+      "link": "/haberler/ai-arastirma-merkezi",
+      "onemli": false,
+      "topics": ["ieu_stu", "anonim"],
+      "okunmaSayisi": 890
+    },
+    "haber3": {
+      "id": "haber3",
+      "baslik": "Öğrenci Başarısı: Uluslararası Yarışmada Birincilik",
+      "ozet": "Bilgisayar Mühendisliği öğrencilerimiz, Avrupa Yazılım Geliştirme Yarışması'nda birincilik elde etti.",
+      "icerik": "İzmir Ekonomi Üniversitesi Bilgisayar Mühendisliği bölümü öğrencilerinden oluşan takım, Avrupa Yazılım Geliştirme Yarışması'nda geliştirdikleri mobil uygulama ile birincilik elde etti. 'EcoTrack' isimli çevre dostu yaşam alışkanlıklarını teşvik eden uygulama, jüri tarafından özellikle sosyal fayda kategorisinde takdir gördü.",
+      "gorselUrl": "https://www.ieu.edu.tr/images/news/student-success-europe.jpg",
+      "kategori": "Öğrenci",
+      "yazar": "Dr. Ayşe Kaya",
+      "olusturmaTarihi": "2024-01-15T16:45:00Z",
+      "link": "/haberler/ogrenci-basarisi-avrupa",
+      "onemli": true,
+      "topics": ["ieu_stu", "anonim"],
+      "okunmaSayisi": 2150
+    },
+    "haber4": {
+      "id": "haber4",
+      "baslik": "Yeni Dönem Kayıt Tarihleri Açıklandı",
+      "ozet": "2024-2025 Bahar dönemi kayıt işlemleri 1 Şubat tarihinde başlayacak.",
+      "icerik": "İzmir Ekonomi Üniversitesi 2024-2025 akademik yılı Bahar dönemi kayıt işlemleri 1 Şubat 2024 tarihinde başlayacak. Öğrencilerimiz, kayıt yenileme işlemlerini öğrenci bilgi sistemi üzerinden gerçekleştirebilecekler. Kayıt tarihleri ve detaylı bilgilere öğrenci portalından ulaşabilirsiniz.",
+      "gorselUrl": "https://www.ieu.edu.tr/images/news/registration-spring.jpg",
+      "kategori": "Öğrenci İşleri",
+      "yazar": "Öğrenci İşleri Daire Başkanlığı",
+      "olusturmaTarihi": "2024-01-12T11:15:00Z",
+      "link": "/haberler/bahar-donemi-kayit",
+      "onemli": false,
+      "topics": ["ieu_stu"],
+      "okunmaSayisi": 3200
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "duyurular": {
+    "duyuru_001": {
+      "baslik": "İEU Mobil Uygulaması Yayında!",
+      "icerik": "İzmir Ekonomi Üniversitesi'nin yeni mobil uygulaması artık kullanıma hazır. Tüm duyuru ve bildirimlerinizi tek yerden takip edebilirsiniz.",
+      "tarih": "2025-07-28T10:00:00.000Z",
+      "kategori": "onemli",
+      "yazar": "İEU Bilgi İşlem",
+      "isActive": true,
+      "onemli": true,
+      "okunmaSayisi": 0,
+      "resimUrl": "",
+      "etiketler": "mobil,uygulama,duyuru",
+      "olusturmaTarihi": "2025-07-28T10:00:00.000Z"
+    },
+    "duyuru_002": {
+      "baslik": "2025-2026 Akademik Yılı Kayıt Takvimi",
+      "icerik": "Yeni akademik yıl kayıt işlemleri 15 Ağustos 2025 tarihinde başlayacaktır. Tüm öğrencilerin belirtilen tarihlerde kayıt yaptırmaları gerekmektedir.",
+      "tarih": "2025-07-28T09:00:00.000Z",
+      "kategori": "akademik",
+      "yazar": "Öğrenci İşleri",
+      "isActive": true,
+      "onemli": true,
+      "okunmaSayisi": 0,
+      "resimUrl": "",
+      "etiketler": "kayıt,akademik,yıl",
+      "olusturmaTarihi": "2025-07-28T09:00:00.000Z"
+    },
+    "duyuru_003": {
+      "baslik": "Kütüphane Yaz Çalışma Saatleri",
+      "icerik": "Üniversitemiz kütüphanesi yaz döneminde Pazartesi-Cuma 08:00-20:00, Cumartesi 09:00-17:00 saatleri arasında hizmet verecektir.",
+      "tarih": "2025-07-28T08:00:00.000Z",
+      "kategori": "genel",
+      "yazar": "Kütüphane Müdürlüğü",
+      "isActive": true,
+      "onemli": false,
+      "okunmaSayisi": 0,
+      "resimUrl": "",
+      "etiketler": "kütüphane,çalışma,saatler",
+      "olusturmaTarihi": "2025-07-28T08:00:00.000Z"
+    },
+    "duyuru_004": {
+      "baslik": "Sosyal Kulüp Etkinlikleri",
+      "icerik": "Bu hafta düzenlenecek sosyal kulüp etkinliklerimiz hakkında detaylı bilgi için öğrenci işleri ile iletişime geçebilirsiniz.",
+      "tarih": "2025-07-28T07:00:00.000Z",
+      "kategori": "sosyal",
+      "yazar": "Sosyal Kulüpler",
+      "isActive": true,
+      "onemli": false,
+      "okunmaSayisi": 0,
+      "resimUrl": "",
+      "etiketler": "sosyal,kulüp,etkinlik",
+      "olusturmaTarihi": "2025-07-28T07:00:00.000Z"
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "rules": {
+    "duyurular": {
+      ".read": true,
+      ".write": "auth != null && auth.token.admin == true",
+      "$duyuruId": {
+        ".validate": "newData.hasChildren(['baslik', 'icerik', 'tarih', 'kategori', 'yazar', 'isActive'])",
+        "baslik": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 200"
+        },
+        "icerik": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "tarih": {
+          ".validate": "newData.isString()"
+        },
+        "kategori": {
+          ".validate": "newData.isString() && ['genel', 'akademik', 'sosyal', 'idari', 'onemli'].contains(newData.val())"
+        },
+        "yazar": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "isActive": {
+          ".validate": "newData.isBoolean()"
+        },
+        "onemli": {
+          ".validate": "newData.isBoolean()"
+        },
+        "okunmaSayisi": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "resimUrl": {
+          ".validate": "newData.isString()"
+        },
+        "etiketler": {
+          ".validate": "newData.isString()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    
+    "bildirimler": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.admin == true",
+      "$userId": {
+        ".read": "auth != null && auth.uid == $userId",
+        ".write": "auth != null && (auth.uid == $userId || auth.token.admin == true)"
+      }
+    },
+
+    "users": {
+      "$userId": {
+        ".read": "auth != null && auth.uid == $userId",
+        ".write": "auth != null && auth.uid == $userId",
+        ".validate": "newData.hasChildren(['email', 'displayName'])",
+        "email": {
+          ".validate": "newData.isString() && newData.val().matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/)"
+        },
+        "displayName": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "photoURL": {
+          ".validate": "newData.isString()"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "lastLoginAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+
+    "fcmTokens": {
+      "$userId": {
+        ".read": "auth != null && auth.uid == $userId",
+        ".write": "auth != null && auth.uid == $userId",
+        "$tokenId": {
+          ".validate": "newData.isString()"
+        }
+      }
+    },
+
+    "appSettings": {
+      ".read": true,
+      ".write": "auth != null && auth.token.admin == true"
+    },
+
+    "$other": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "sliders": {
+    "slider1": {
+      "id": "slider1",
+      "title": "İEU'de Eğitim Hayatınız Başlıyor",
+      "body": "Dünya standartlarında eğitim, modern kampüs ve global kariyer fırsatları sizi bekliyor.",
+      "imageUrl": "https://www.ieu.edu.tr/images/slider/campus-1.jpg",
+      "link": "/akademik-programlar",
+      "order": 1,
+      "isActive": true,
+      "createdAt": "2024-01-15T10:00:00Z"
+    },
+    "slider2": {
+      "id": "slider2", 
+      "title": "Araştırma ve İnovasyonda Öncü",
+      "body": "Bilimsel araştırma merkezlerimiz ve teknoloji transferi ile geleceği şekillendiriyoruz.",
+      "imageUrl": "https://www.ieu.edu.tr/images/slider/research-1.jpg",
+      "link": "/arastirma",
+      "order": 2,
+      "isActive": true,
+      "createdAt": "2024-01-16T10:00:00Z"
+    },
+    "slider3": {
+      "id": "slider3",
+      "title": "Küresel Kariyer Fırsatları",
+      "body": "Partner üniversitelerimiz ve uluslararası iş birliği programları ile dünyaya açılın.",
+      "imageUrl": "https://www.ieu.edu.tr/images/slider/global-1.jpg", 
+      "link": "/uluslararasi",
+      "order": 3,
+      "isActive": true,
+      "createdAt": "2024-01-17T10:00:00Z"
+    }
+  }
+}

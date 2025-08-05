@@ -1,0 +1,41 @@
+{
+  "duyuru1": {
+    "baslik": "İEU Mobil Uygulama Test",
+    "icerik": "Bu bir test duyurusudur. Firebase Realtime Database bağlantısı başarıyla kurulmuştur. Uygulama artık gerçek zamanlı duyuru güncellemelerini alabilmektedir.",
+    "tarih": "2025-07-28T15:30:00.000Z",
+    "kategori": "Genel",
+    "yazar": "Sistem Yöneticisi",
+    "isActive": true,
+    "onemli": true,
+    "okunmaSayisi": 0,
+    "resimUrl": "",
+    "etiketler": "test,mobil,uygulama",
+    "topics": ["anonim", "ieu_stu"]
+  },
+  "duyuru2": {
+    "baslik": "Akademik Takvim Güncellendi",
+    "icerik": "2025-2026 Akademik yılı takvimi güncellendi. Detaylar için öğrenci bilgi sistemine bakınız.",
+    "tarih": "2025-07-28T14:00:00.000Z",
+    "kategori": "Akademik",
+    "yazar": "Öğrenci İşleri",
+    "isActive": true,
+    "onemli": false,
+    "okunmaSayisi": 0,
+    "resimUrl": "",
+    "etiketler": "akademik,takvim,2025",
+    "topics": ["ieu_stu"]
+  },
+  "duyuru3": {
+    "baslik": "Kütüphane Çalışma Saatleri",
+    "icerik": "Merkez kütüphane yaz dönemi çalışma saatleri: Pazartesi-Cuma 08:00-20:00, Cumartesi 09:00-17:00",
+    "tarih": "2025-07-28T13:00:00.000Z",
+    "kategori": "Sosyal",
+    "yazar": "Kütüphane Müdürlüğü",
+    "isActive": true,
+    "onemli": false,
+    "okunmaSayisi": 0,
+    "resimUrl": "",
+    "etiketler": "kütüphane,çalışma,saatler",
+    "topics": ["anonim", "ieu_stu"]
+  }
+}
