@@ -49,6 +49,7 @@ node_modules/
 
 # Firebase
 .firebase/
+*firebase-adminsdk*.json
 
 # Package lock files
 package-lock.json
