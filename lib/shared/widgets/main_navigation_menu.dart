@@ -60,7 +60,7 @@ class MainNavigationMenu extends StatelessWidget {
                 const SizedBox(width: 12),
                 const Expanded(
                   child: Text(
-                    'Üniversite Menüsü',
+                    'Üniversite',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class MainNavigationMenu extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Text(
-                    'İEÜ',
+                    'IEU',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,

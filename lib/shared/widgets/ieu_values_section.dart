@@ -79,7 +79,7 @@ class IEUValuesSection extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               const Text(
-                'İEÜ DEĞERLERİ',
+                'IEU DEĞERLERİ',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

@@ -204,7 +204,7 @@ class _NewHomeScreenState extends State<NewHomeScreen>
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      isStudent ? 'Hoşgeldin' : 'İEÜ\'ye Hoşgeldin',
+                                      isStudent ? 'Hoşgeldin' : 'IEU\'ye Hoşgeldin',
                                       style: const TextStyle(
                                         color: Colors.white70,
                                         fontSize: 12,

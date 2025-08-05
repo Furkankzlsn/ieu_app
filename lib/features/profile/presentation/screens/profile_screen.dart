@@ -79,9 +79,9 @@ class _ProfileScreenState extends State<ProfileScreen>
             CircleAvatar(
               radius: 40,
               backgroundColor: AppColors.primaryColor,
-              child: Text(
-                user?.displayName?.substring(0, 2).toUpperCase() ?? 'MK',
-                style: const TextStyle(
+              child: const Text(
+                'MK',
+                style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
