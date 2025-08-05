@@ -181,10 +181,14 @@ class _HomeSliderState extends State<HomeSlider> {
               // Background image
               Image.network(
                 slider.resimUrl,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
+                width: double.infinity,
+                height: double.infinity,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
                   return Container(
+                    width: double.infinity,
+                    height: double.infinity,
                     color: Colors.grey[300],
                     child: const Center(
                       child: CircularProgressIndicator(),
@@ -193,11 +197,15 @@ class _HomeSliderState extends State<HomeSlider> {
                 },
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
+                    width: double.infinity,
+                    height: double.infinity,
                     color: AppColors.primaryColor.withOpacity(0.1),
-                    child: const Icon(
-                      Icons.image_not_supported,
-                      size: 50,
-                      color: AppColors.primaryColor,
+                    child: const Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        size: 50,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
                   );
                 },

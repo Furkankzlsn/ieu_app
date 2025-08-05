@@ -130,9 +130,35 @@ class _HeroSliderState extends State<HeroSlider> {
                           // Background Image
                           Image.network(
                             slide.imageUrl,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
+                            width: double.infinity,
+                            height: double.infinity,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                width: double.infinity,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      AppColors.primaryColor.withOpacity(0.3),
+                                      AppColors.primaryColor.withOpacity(0.1)
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              );
+                            },
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
+                                width: double.infinity,
+                                height: double.infinity,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [

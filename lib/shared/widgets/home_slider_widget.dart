@@ -74,16 +74,31 @@ class HomeSliderWidget extends StatelessWidget {
                       child: slider.hasValidImage
                           ? Image.network(
                               slider.resimUrl,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                               width: double.infinity,
                               height: double.infinity,
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  color: Colors.grey[300],
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              },
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
                                   color: AppColors.primaryColor.withOpacity(0.1),
-                                  child: const Icon(
-                                    Icons.image_not_supported,
-                                    size: 50,
-                                    color: AppColors.textColor,
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.image_not_supported,
+                                      size: 50,
+                                      color: AppColors.textColor,
+                                    ),
                                   ),
                                 );
                               },
