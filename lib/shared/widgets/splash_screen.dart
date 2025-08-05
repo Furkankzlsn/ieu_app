@@ -129,38 +129,29 @@ class _SplashScreenState extends State<SplashScreen>
                       const SizedBox(height: 40),
                       
                       // Uygulama adı
-                      Text(
-                        'İzmir Ekonomi Üniversitesi',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ).copyWith(
-                          shadows: [
-                            Shadow(
-                              color: Colors.black.withOpacity(0.3),
-                              offset: const Offset(0, 2),
-                              blurRadius: 4,
-                            ),
-                          ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          'İzmir Ekonomi Üniversitesi',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: MediaQuery.of(context).size.width < 350 ? 24 : 28,
+                            fontWeight: FontWeight.bold,
+                          ).copyWith(
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withOpacity(0.3),
+                                offset: const Offset(0, 2),
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       
-                      const SizedBox(height: 10),
-                      
-                      // Alt yazı
-                      Text(
-                        'Mobil Uygulama',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                        ).copyWith(
-                          color: Colors.white.withOpacity(0.9),
-                        ),
-                      ),
-                      
-                      const SizedBox(height: 60),
+                      const SizedBox(height: 30),
+
                       
                       // Loading indicator
                       const SizedBox(

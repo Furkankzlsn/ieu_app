@@ -201,35 +201,13 @@ class CompactNewsWidget extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    // Date and Read Count
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _formatDate(news.yayinTarihi),
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: AppColors.textColor.withOpacity(0.5),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.visibility,
-                              size: 12,
-                              color: AppColors.textColor.withOpacity(0.5),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${news.okunmaSayisi}',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: AppColors.textColor.withOpacity(0.5),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                    // Date
+                    Text(
+                      _formatDate(news.yayinTarihi),
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: AppColors.textColor.withOpacity(0.5),
+                      ),
                     ),
                   ],
                 ),
