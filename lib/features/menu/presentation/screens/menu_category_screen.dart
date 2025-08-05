@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/constants/app_constants.dart';
+import '../../../../shared/utils/webview_utils.dart';
 import '../../../../services/menu_service.dart';
 
 class MenuCategoryScreen extends StatefulWidget {
@@ -11,16 +12,10 @@ class MenuCategoryScreen extends StatefulWidget {
 
 class _MenuCategoryScreenState extends State<MenuCategoryScreen> {
   final MenuService _menuService = MenuService();
-  Map<String, dynamic>? _menuData;
+  List<MenuItemModel> _menuItems = [];
   bool _isLoading = true;
   String _category = '';
   String _title = '';
-
-  // HTML strip fonksiyonu
-  String _stripHtmlTags(String htmlString) {
-    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
-    return htmlString.replaceAll(exp, '').replaceAll('&nbsp;', ' ').trim();
-  }
 
   @override
   void didChangeDependencies() {
@@ -38,314 +33,250 @@ class _MenuCategoryScreenState extends State<MenuCategoryScreen> {
         _isLoading = true;
       });
 
-      Map<String, dynamic>? menuData;
+      final menuData = await _menuService.getMenuByCategory(_category);
+      print('📊 Firebase\'den gelen veri (${menuData.length} öğe): $menuData');
       
-      // Kategori bazında Firebase'den veri çek
-      switch (_category) {
-        case 'universite':
-          menuData = await _menuService.getUniversiteMenus();
-          break;
-        case 'akademik':
-          menuData = await _menuService.getAkademikMenus();
-          break;
-        case 'arastirma':
-          menuData = await _menuService.getArastirmaMenus();
-          break;
-        case 'kampus':
-          menuData = await _menuService.getKampusMenus();
-          break;
-        case 'international':
-          menuData = await _menuService.getInternationalMenus();
-          break;
-        case 'iletisim':
-          menuData = await _menuService.getIletisimMenus();
-          break;
-        default:
-          // Fallback için placeholder veri
-          menuData = await _getPlaceholderMenuData();
-      }
-      
-      if (menuData != null) {
-        print('📊 $_category kategorisinde ${menuData.length} menü öğesi bulundu');
-        menuData.forEach((key, value) {
-          if (value is Map && value.containsKey('baslik')) {
-            print('   - $key: ${value['baslik']}');
-          }
-        });
-      } else {
-        print('❌ $_category kategorisi için veri bulunamadı');
-      }
-      
+      final List<MenuItemModel> items = [];
+
+      // Firebase verisini MenuItemModel listesine dönüştür
+      menuData.forEach((key, value) {
+        print('🔍 İşleniyor - Key: $key, Value: $value, Type: ${value.runtimeType}');
+        if (value is Map<String, dynamic>) {
+          final item = MenuItemModel(
+            id: key,
+            baslik: value['baslik'] ?? 'Başlık Yok',
+            link: value['link'] ?? '',
+            sira: value['sira'] ?? 0,
+            aciklama: value['aciklama'],
+          );
+          items.add(item);
+          print('✅ Eklendi: ${item.baslik} (Sıra: ${item.sira})');
+        } else if (value is Map) {
+          // Map türünü Map<String, dynamic>'e dönüştür
+          final valueMap = Map<String, dynamic>.from(value);
+          final item = MenuItemModel(
+            id: key,
+            baslik: valueMap['baslik'] ?? 'Başlık Yok',
+            link: valueMap['link'] ?? '',
+            sira: valueMap['sira'] ?? 0,
+            aciklama: valueMap['aciklama'],
+          );
+          items.add(item);
+          print('✅ Eklendi (Map dönüştürme): ${item.baslik} (Sıra: ${item.sira})');
+        } else {
+          print('❌ Geçersiz veri tipi: $key -> ${value.runtimeType}');
+        }
+      });
+
+      // Sıraya göre sırala
+      items.sort((a, b) => a.sira.compareTo(b.sira));
+      print('📋 Toplam ${items.length} menü öğesi yüklendi ve sıralandı');
+
       setState(() {
-        _menuData = menuData;
+        _menuItems = items;
         _isLoading = false;
       });
+
     } catch (e) {
-      print('❌ $_category menü yükleme hatası: $e');
+      print('❌ Menü yükleme hatası: $e');
+      print('❌ Hata detayı: ${e.toString()}');
       setState(() {
         _isLoading = false;
       });
+      
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Menü yüklenemedi: $e')),
+          SnackBar(
+            content: Text('Menü yükleme hatası: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
   }
-
-  Future<Map<String, dynamic>> _getPlaceholderMenuData() async {
-    // Geçici placeholder veri - Firebase'e eklenene kadar
-    switch (_category) {
-      case 'akademik':
-        return {
-          'lisans_programlari': {
-            'baslik': 'Lisans Programları',
-            'icerik': 'Lisans programları bilgileri yakında eklenecektir.',
-          },
-          'yuksek_lisans': {
-            'baslik': 'Yüksek Lisans',
-            'icerik': 'Yüksek lisans programları bilgileri yakında eklenecektir.',
-          },
-          'doktora': {
-            'baslik': 'Doktora',
-            'icerik': 'Doktora programları bilgileri yakında eklenecektir.',
-          },
-        };
-      case 'arastirma':
-        return {
-          'arastirma_merkezleri': {
-            'baslik': 'Araştırma Merkezleri',
-            'icerik': 'Araştırma merkezleri bilgileri yakında eklenecektir.',
-          },
-          'projeler': {
-            'baslik': 'Projeler',
-            'icerik': 'Projeler bilgileri yakında eklenecektir.',
-          },
-        };
-      case 'kampus':
-        return {
-          'kampus_yasami': {
-            'baslik': 'Kampüs Yaşamı',
-            'icerik': 'Kampüs yaşamı bilgileri yakında eklenecektir.',
-          },
-          'ogrenci_kulupleri': {
-            'baslik': 'Öğrenci Kulüpleri',
-            'icerik': 'Öğrenci kulüpleri bilgileri yakında eklenecektir.',
-          },
-        };
-      case 'international':
-        return {
-          'degisim_programlari': {
-            'baslik': 'Değişim Programları',
-            'icerik': 'Değişim programları bilgileri yakında eklenecektir.',
-          },
-          'uluslararasi_ogrenciler': {
-            'baslik': 'Uluslararası Öğrenciler',
-            'icerik': 'Uluslararası öğrenci bilgileri yakında eklenecektir.',
-          },
-        };
-      case 'iletisim':
-        return {
-          'iletisim_bilgileri': {
-            'baslik': 'İletişim Bilgileri',
-            'icerik': 'İletişim bilgileri yakında eklenecektir.',
-          },
-          'kampus_haritasi': {
-            'baslik': 'Kampüs Haritası',
-            'icerik': 'Kampüs haritası yakında eklenecektir.',
-          },
-        };
-      default:
-        return {};
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: Text(_title),
-        backgroundColor: const Color(0xFF1E3A8A),
+        backgroundColor: AppColors.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
-      body: _isLoading
+      body: _isLoading 
           ? const Center(child: CircularProgressIndicator())
           : _buildMenuContent(),
     );
   }
 
   Widget _buildMenuContent() {
-    if (_menuData == null || _menuData!.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.info_outline,
-              size: 64,
-              color: Colors.grey.shade400,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Bu kategori için henüz içerik eklenmemiş',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey.shade600,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-              label: const Text('Geri Dön'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1E3A8A),
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ],
+    if (_menuItems.isEmpty) {
+      return const Center(
+        child: Text(
+          'Menü öğeleri bulunamadı',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.grey,
+          ),
         ),
       );
     }
 
-    return ListView(
-      padding: const EdgeInsets.all(AppSizes.paddingM),
-      children: [
-        // Kategori başlığı
-        Container(
-          padding: const EdgeInsets.all(AppSizes.paddingM),
-          margin: const EdgeInsets.only(bottom: AppSizes.marginM),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1E3A8A).withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(AppSizes.radiusM),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                _getCategoryIcon(),
-                color: const Color(0xFF1E3A8A),
-                size: 24,
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.primaryColor,
+                  AppColors.primaryColor.withOpacity(0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              const SizedBox(width: 12),
-              Text(
-                _title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E3A8A),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  _getCategoryIcon(),
+                  color: Colors.white,
+                  size: 32,
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  _title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _getCategoryDescription(),
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
 
-        // Menu items
-        ..._menuData!.entries.map((entry) => _buildMenuItem(
-          entry.value['baslik'] ?? entry.key,
-          entry.value['icerik'] ?? 'İçerik bulunamadı',
-          entry.key,
-        )).toList(),
-      ],
-    );
-  }
+          const SizedBox(height: 24),
 
-  Widget _buildMenuItem(String title, String content, String key) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppSizes.marginM),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppSizes.radiusM),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.1),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+          // Menu Items
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _menuItems.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final item = _menuItems[index];
+              return _buildMenuItem(item);
+            },
           ),
         ],
       ),
-      child: InkWell(
-        onTap: () => _showMenuDetail(title, content, key),
-        borderRadius: BorderRadius.circular(AppSizes.radiusM),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSizes.paddingM),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1E3A8A).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.article,
-                  color: const Color(0xFF1E3A8A),
-                  size: 20,
-                ),
+    );
+  }
+
+  Widget _buildMenuItem(MenuItemModel item) {
+    return InkWell(
+      onTap: () => _openMenuItem(item),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.primaryColor.withOpacity(0.15),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E3A8A),
-                      ),
+              child: Icon(
+                Icons.chevron_right,
+                color: AppColors.primaryColor,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.baslik,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textColor,
                     ),
+                  ),
+                  if (item.aciklama != null) ...[
                     const SizedBox(height: 4),
                     Text(
-                      () {
-                        String strippedContent = _stripHtmlTags(content);
-                        return strippedContent.length > 80 
-                            ? '${strippedContent.substring(0, 80)}...'
-                            : strippedContent;
-                      }(),
+                      item.aciklama!,
                       style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey.shade600,
-                        height: 1.3,
+                        fontSize: 12,
+                        color: AppColors.textColor.withOpacity(0.7),
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
-                ),
+                ],
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey.shade400,
-                size: 16,
-              ),
-            ],
-          ),
+            ),
+            Icon(
+              Icons.open_in_new,
+              color: AppColors.primaryColor.withOpacity(0.7),
+              size: 16,
+            ),
+          ],
         ),
       ),
     );
   }
 
-  void _showMenuDetail(String title, String content, String key) {
-    Navigator.pushNamed(
+  void _openMenuItem(MenuItemModel item) {
+    openWebView(
       context,
-      '/menu-detail',
-      arguments: {
-        'category': _category,
-        'menuId': key,
-        'title': title,
-        'content': content,
-      },
+      item.link,
+      title: item.baslik,
     );
   }
 
   IconData _getCategoryIcon() {
     switch (_category) {
       case 'universite':
-        return Icons.school;
+        return Icons.account_balance;
       case 'akademik':
-        return Icons.book;
+        return Icons.school;
       case 'arastirma':
         return Icons.science;
       case 'kampus':
@@ -358,4 +289,40 @@ class _MenuCategoryScreenState extends State<MenuCategoryScreen> {
         return Icons.menu;
     }
   }
+
+  String _getCategoryDescription() {
+    switch (_category) {
+      case 'universite':
+        return 'Kurumsal bilgiler ve yönetim';
+      case 'akademik':
+        return 'Fakülteler, yüksekokullar ve programlar';
+      case 'arastirma':
+        return 'Araştırma merkezleri ve projeler';
+      case 'kampus':
+        return 'Kampüs yaşamı ve tesisler';
+      case 'international':
+        return 'Uluslararası programlar';
+      case 'iletisim':
+        return 'İletişim bilgileri';
+      default:
+        return 'Menü kategorisi';
+    }
+  }
+}
+
+// MenuItemModel sınıfı
+class MenuItemModel {
+  final String id;
+  final String baslik;
+  final String link;
+  final int sira;
+  final String? aciklama;
+
+  MenuItemModel({
+    required this.id,
+    required this.baslik,
+    required this.link,
+    required this.sira,
+    this.aciklama,
+  });
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_sizes.dart';
+import '../utils/webview_utils.dart';
 
 class MainNavigationMenu extends StatelessWidget {
   const MainNavigationMenu({super.key});
@@ -233,6 +234,26 @@ class MainNavigationMenu extends StatelessWidget {
   }
 
   void _navigateToMenu(BuildContext context, String menuType) {
+    // International ve İletişim için direkt WebView aç
+    if (menuType == 'international') {
+      openWebView(
+        context,
+        'https://www.ieu.edu.tr/international/en',
+        title: 'International',
+      );
+      return;
+    }
+    
+    if (menuType == 'iletisim') {
+      openWebView(
+        context,
+        'https://www.ieu.edu.tr/tr/iletisim',
+        title: 'İletişim',
+      );
+      return;
+    }
+    
+    // Diğerleri için alt menü sayfası aç
     Navigator.pushNamed(
       context,
       '/menu-category',
