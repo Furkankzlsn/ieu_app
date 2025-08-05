@@ -7,7 +7,7 @@ class IeuValuesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
+      margin: const EdgeInsets.only(top: 8, bottom: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -23,11 +23,12 @@ class IeuValuesWidget extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           // Values Grid
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: GridView.count(
+              padding: EdgeInsets.zero, // GridView'ın varsayılan padding'ini kaldır
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               crossAxisCount: 2,

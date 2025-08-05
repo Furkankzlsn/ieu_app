@@ -327,15 +327,12 @@ class _NewHomeScreenState extends State<NewHomeScreen>
                       newsList: _news,
                     ),
                     
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 16),
                     
                     // Announcements Section
                     CompactAnnouncementsWidget(announcements: _announcements),
                     
-                    const SizedBox(height: 16),
-
-                    
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 8),
                     
                     // IEU Values Section
                     const IeuValuesWidget(),
