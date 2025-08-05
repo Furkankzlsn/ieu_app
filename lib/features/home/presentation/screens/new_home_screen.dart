@@ -381,7 +381,15 @@ class _NewHomeScreenState extends State<NewHomeScreen>
                   'Başvuru ve kayıt',
                   Icons.school,
                   AppColors.primaryColor,
-                  () => print('Navigate to candidate student'),
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WebViewScreen(
+                        url: 'https://www.ieu.edu.tr/aday/tr',
+                        title: 'Aday Öğrenci',
+                      ),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
