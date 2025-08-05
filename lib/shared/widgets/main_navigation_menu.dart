@@ -117,7 +117,7 @@ class MainNavigationMenu extends StatelessWidget {
                   context,
                   'Araştırma',
                   Icons.science,
-                  const Color(0xFFDC2626),
+                  const Color(0xFF0891B2),
                   'Projeler ve yayınlar',
                   () => _navigateToMenu(context, 'arastirma'),
                 ),
