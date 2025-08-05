@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_constants.dart';
+import '../utils/webview_utils.dart';
 
 class IeuValuesWidget extends StatelessWidget {
   const IeuValuesWidget({Key? key}) : super(key: key);
@@ -37,28 +38,36 @@ class IeuValuesWidget extends StatelessWidget {
               childAspectRatio: 1.3, // 1.2'den 1.3'e artırdık
               children: [
                 _buildValueCard(
+                  context,
                   'Küresel Kariyer',
                   'Uluslararası iş birliği ve global fırsatlar',
                   Icons.public,
                   AppColors.primaryColor,
+                  'https://www.ieu.edu.tr/tr/kuresel-kariyer',
                 ),
                 _buildValueCard(
+                  context,
                   'Bilime Katkı',
                   'Araştırma ve geliştirme projeleri',
                   Icons.science,
                   AppColors.successColor,
+                  'https://www.ieu.edu.tr/tr/bilime-katki',
                 ),
                 _buildValueCard(
+                  context,
                   'İnsana Değer',
                   'Öğrenci odaklı eğitim anlayışı',
                   Icons.people,
                   AppColors.warningColor,
+                  'https://www.ieu.edu.tr/tr/insana-deger',
                 ),
                 _buildValueCard(
+                  context,
                   'Topluma Fayda',
                   'Sosyal sorumluluk projeleri',
                   Icons.volunteer_activism,
                   AppColors.infoColor,
+                  'https://www.ieu.edu.tr/tr/topluma-yarar',
                 ),
               ],
             ),
@@ -68,8 +77,12 @@ class IeuValuesWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildValueCard(String title, String subtitle, IconData icon, Color color) {
-    return Container(
+  Widget _buildValueCard(BuildContext context, String title, String subtitle, IconData icon, Color color, String url) {
+    return GestureDetector(
+      onTap: () {
+        openWebView(context, url, title: title);
+      },
+      child: Container(
       padding: const EdgeInsets.all(12), // 16'dan 12'ye azalttık
       decoration: BoxDecoration(
         color: Colors.white,
@@ -122,6 +135,7 @@ class IeuValuesWidget extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }
