@@ -48,11 +48,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red,
-              ),
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
               const Text(
                 'Öğrenci girişi yapmanız gerekiyor',
@@ -60,7 +56,8 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, '/profile'),
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, '/profile'),
                 child: const Text('Giriş Yap'),
               ),
             ],
@@ -79,11 +76,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
               height: 32,
               width: 32,
               errorBuilder: (context, error, stackTrace) {
-                return const Icon(
-                  Icons.school,
-                  size: 32,
-                  color: AppColors.primaryColor,
-                );
+                return const Icon(Icons.school, size: 32, color: Colors.white);
               },
             ),
             const SizedBox(width: 8),
@@ -92,16 +85,18 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
+                color: Colors.white,
               ),
             ),
           ],
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryColor,
+        foregroundColor: Colors.white,
         elevation: 0,
         actions: [
           IconButton(
             onPressed: () => Navigator.pushNamed(context, '/profile'),
-            icon: const Icon(Icons.person),
+            icon: const Icon(Icons.person, color: Colors.white),
           ),
         ],
       ),
@@ -113,9 +108,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
             children: [
               // Welcome Card
               _buildWelcomeCard(user),
-              
+
               const SizedBox(height: 24),
-              
+
               // Quick Actions Grid
               const Text(
                 'Hızlı İşlemler',
@@ -126,11 +121,11 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               _buildQuickActionsGrid(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Student Info Card
               _buildStudentInfoCard(user),
             ],
@@ -171,7 +166,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
                 radius: 30,
                 backgroundColor: Colors.white.withOpacity(0.2),
                 child: Text(
-                  _getInitials(user.displayName),
+                  _getInitials(user.displayName ?? 'İÖ'),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -186,13 +181,10 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
                   children: [
                     const Text(
                       'Hoş Geldiniz',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),
                     Text(
-                      user.displayName,
+                      user.displayName ?? 'İzmir Ekonomi Öğrencisi',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -201,10 +193,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
                     ),
                     const Text(
                       'İEU Öğrenci Sistemi',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
                     ),
                   ],
                 ),
@@ -217,43 +206,51 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
   }
 
   Widget _buildQuickActionsGrid() {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      crossAxisSpacing: 16,
-      mainAxisSpacing: 16,
-      childAspectRatio: 1.1,
-      children: [
-        _buildQuickActionCard(
-          'Sınav Programı',
-          'Sınav takvimini görüntüle',
-          Icons.assignment_turned_in,
-          Colors.blue,
-          () => _navigateToExamSchedule(),
-        ),
-        _buildQuickActionCard(
-          'Ders Programı',
-          'Haftalık ders programı',
-          Icons.schedule,
-          Colors.green,
-          () => _navigateToCourseSchedule(),
-        ),
-        _buildQuickActionCard(
-          'Notlar',
-          'Akademik sonuçlar',
-          Icons.grade,
-          Colors.orange,
-          () => _showComingSoon('Notlar'),
-        ),
-        _buildQuickActionCard(
-          'Transkript',
-          'Akademik geçmiş',
-          Icons.description,
-          Colors.purple,
-          () => _showComingSoon('Transkript'),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Ekran genişliğine göre ayarlama
+        final screenWidth = MediaQuery.of(context).size.width;
+        final isSmallScreen = screenWidth < 400;
+
+        return GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          crossAxisSpacing: isSmallScreen ? 12 : 16,
+          mainAxisSpacing: isSmallScreen ? 12 : 16,
+          childAspectRatio: isSmallScreen ? 1.0 : 1.1,
+          children: [
+            _buildQuickActionCard(
+              'Sınav Programı',
+              'Sınav takvimini görüntüle',
+              Icons.assignment_turned_in,
+              Colors.blue,
+              () => _navigateToExamSchedule(),
+            ),
+            _buildQuickActionCard(
+              'Ders Programı',
+              'Haftalık ders programı',
+              Icons.schedule,
+              Colors.green,
+              () => _navigateToCourseSchedule(),
+            ),
+            _buildQuickActionCard(
+              'Notlar',
+              'Akademik sonuçlar',
+              Icons.grade,
+              Colors.orange,
+              () => _showComingSoon('Notlar'),
+            ),
+            _buildQuickActionCard(
+              'Transkript',
+              'Akademik geçmiş',
+              Icons.description,
+              Colors.purple,
+              () => _showComingSoon('Transkript'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -264,64 +261,77 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
     Color color,
     VoidCallback onTap,
   ) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Kart boyutuna göre font ayarlama
+        final cardWidth = constraints.maxWidth;
+        final isSmallCard = cardWidth < 160;
+
+        final titleFontSize = isSmallCard ? 14.0 : 16.0;
+        final subtitleFontSize = isSmallCard ? 10.0 : 12.0;
+        final iconSize = isSmallCard ? 28.0 : 32.0;
+        final padding = isSmallCard ? 12.0 : 16.0;
+        final iconPadding = isSmallCard ? 8.0 : 12.0;
+        final spacing = isSmallCard ? 8.0 : 12.0;
+
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+            child: Container(
+              padding: EdgeInsets.all(padding),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-            ],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(iconPadding),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(icon, color: color, size: iconSize),
+                  ),
+                  SizedBox(height: spacing),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: titleFontSize,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textColor,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: subtitleFontSize,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 32,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textColor,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -352,12 +362,18 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
             ),
           ),
           const SizedBox(height: 16),
-          _buildInfoRow('Ad Soyad', user.displayName),
+          _buildInfoRow('Ad Soyad', user.displayName ?? 'Bilinmiyor'),
           _buildInfoRow('E-posta', user.email),
           _buildInfoRow('Öğrenci No', user.studentNumber ?? 'Bilinmiyor'),
           _buildInfoRow('Bölüm', user.department ?? 'Bilinmiyor'),
-          _buildInfoRow('Sınıf', '${user.grade}. Sınıf'),
-          _buildInfoRow('Kayıt Yılı', user.enrollmentYear.toString()),
+          _buildInfoRow(
+            'Sınıf',
+            user.grade != null ? '${user.grade}. Sınıf' : 'Bilinmiyor',
+          ),
+          _buildInfoRow(
+            'Kayıt Yılı',
+            user.enrollmentYear?.toString() ?? 'Bilinmiyor',
+          ),
         ],
       ),
     );
@@ -400,24 +416,21 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen>
     final words = name.split(' ');
     if (words.isEmpty) return 'İÖ';
     if (words.length == 1) return words[0].substring(0, 1).toUpperCase();
-    return '${words[0].substring(0, 1)}${words[1].substring(0, 1)}'.toUpperCase();
+    return '${words[0].substring(0, 1)}${words[1].substring(0, 1)}'
+        .toUpperCase();
   }
 
   void _navigateToExamSchedule() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const ExamScheduleScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const ExamScheduleScreen()),
     );
   }
 
   void _navigateToCourseSchedule() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const CourseScheduleScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const CourseScheduleScreen()),
     );
   }
 

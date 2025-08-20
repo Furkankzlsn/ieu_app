@@ -10,23 +10,23 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> 
+class _ProfileScreenState extends State<ProfileScreen>
     with WidgetsBindingObserver {
   final AuthService _authService = AuthService();
   bool _isLoading = false;
-  
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
-  
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
-  
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && mounted) {
@@ -52,9 +52,9 @@ class _ProfileScreenState extends State<ProfileScreen>
           children: [
             // User Info Card
             _buildUserInfoCard(user, isStudent),
-            
+
             const SizedBox(height: 20),
-            
+
             // Login/Logout Section
             if (!isStudent) ...[
               _buildLoginSection(),
@@ -91,10 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             const SizedBox(height: 12),
             Text(
               user?.displayName ?? 'Bilinmeyen Kullanıcı',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Container(
@@ -128,10 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           children: [
             const Text(
               'Öğrenci Girişi',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             const Text(
@@ -165,17 +159,23 @@ class _ProfileScreenState extends State<ProfileScreen>
           children: [
             const Text(
               'Öğrenci Bilgileri',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            _buildInfoRow('Öğrenci Numarası:', user.studentNumber ?? 'Bilinmiyor'),
+            _buildInfoRow(
+              'Öğrenci Numarası:',
+              user.studentNumber ?? 'Bilinmiyor',
+            ),
             _buildInfoRow('Bölüm:', user.department ?? 'Bilinmiyor'),
             _buildInfoRow('Fakülte:', user.faculty ?? 'Bilinmiyor'),
-            _buildInfoRow('Sınıf:', user.gradeString),
-            _buildInfoRow('Kayıt Yılı:', user.enrollmentYear?.toString() ?? 'Bilinmiyor'),
+            _buildInfoRow(
+              'Sınıf:',
+              user.grade != null ? '${user.grade}. Sınıf' : 'Bilinmiyor',
+            ),
+            _buildInfoRow(
+              'Kayıt Yılı:',
+              user.enrollmentYear?.toString() ?? 'Bilinmiyor',
+            ),
             _buildInfoRow('Yaş:', user.age?.toString() ?? 'Bilinmiyor'),
             _buildInfoRow('E-posta:', user.email),
           ],
@@ -221,16 +221,16 @@ class _ProfileScreenState extends State<ProfileScreen>
           children: [
             const Text(
               'Hesap İşlemleri',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: _isLoading ? null : _logout,
               icon: const Icon(Icons.logout, color: Colors.red),
-              label: const Text('Çıkış Yap', style: TextStyle(color: Colors.red)),
+              label: const Text(
+                'Çıkış Yap',
+                style: TextStyle(color: Colors.red),
+              ),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.red),
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -298,11 +298,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                       setState(() => isLoading = false);
                       if (mounted && success) {
                         Navigator.of(context).pop();
-                        // Student Dashboard'a yönlendir
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/student-dashboard', 
-                          (route) => false,
-                        );
+                        // Ana ekrana dön, AppRootScreen otomatik olarak student dashboard'a yönlendirecek
+                        Navigator.of(
+                          context,
+                        ).pushNamedAndRemoveUntil('/home', (route) => false);
                       }
                     },
               child: isLoading
@@ -340,7 +339,9 @@ class _ProfileScreenState extends State<ProfileScreen>
         }
         return true;
       } else {
-        _showErrorDialog('Giriş başarısız. Lütfen bilgilerinizi kontrol ediniz.');
+        _showErrorDialog(
+          'Giriş başarısız. Lütfen bilgilerinizi kontrol ediniz.',
+        );
         return false;
       }
     } catch (e) {
@@ -366,7 +367,10 @@ class _ProfileScreenState extends State<ProfileScreen>
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Çıkış Yap', style: TextStyle(color: Colors.white)),
+            child: const Text(
+              'Çıkış Yap',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -379,8 +383,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         await _authService.logout();
         if (mounted) {
           setState(() {});
-          // Dashboard'a dön ve güncelle
-          Navigator.of(context).pushNamedAndRemoveUntil('/dashboard', (route) => false);
+          // Ana ekrana dön (NewHomeScreen)
+          Navigator.of(
+            context,
+          ).pushNamedAndRemoveUntil('/home', (route) => false);
         }
       } catch (e) {
         _showErrorDialog('Çıkış sırasında bir hata oluştu: $e');
@@ -396,23 +402,6 @@ class _ProfileScreenState extends State<ProfileScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Hata'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Tamam'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showSuccessDialog(String message) {
-    if (!mounted) return;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Başarılı'),
         content: Text(message),
         actions: [
           TextButton(

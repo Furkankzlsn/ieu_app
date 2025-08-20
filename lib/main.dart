@@ -30,7 +30,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize Firebase only if not already initialized
   try {
     await Firebase.initializeApp(
@@ -43,13 +43,13 @@ void main() async {
       print('Firebase initialization error: $e');
     }
   }
-  
+
   // Set background message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  
+
   // Initialize shared preferences
   await SharedPreferences.getInstance();
-  
+
   runApp(const IEUApp());
 }
 
@@ -64,12 +64,12 @@ class IEUApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       home: const MainApp(),
       routes: {
-        '/home': (context) => const NewHomeScreen(),
+        '/home': (context) => const AppRootScreen(),
         '/notifications': (context) => const NotificationsScreen(),
         '/announcements': (context) => const AnnouncementsScreen(),
         '/all-announcements': (context) => const AllAnnouncementsScreen(),
         '/profile': (context) => const ProfileScreen(),
-        '/dashboard': (context) => const NewHomeScreen(),
+        '/dashboard': (context) => const AppRootScreen(),
         '/student-dashboard': (context) => const StudentDashboardScreen(),
         '/exam-schedule': (context) => const ExamScheduleScreen(),
         '/course-schedule': (context) => const CourseScheduleScreen(),
@@ -82,7 +82,7 @@ class IEUApp extends StatelessWidget {
             builder: (context) => SliderDetailScreen(sliderId: sliderId),
           );
         }
-        
+
         // Haber detay sayfası
         if (settings.name?.startsWith('/news-detail/') == true) {
           final newsId = settings.name!.replaceFirst('/news-detail/', '');
@@ -90,19 +90,16 @@ class IEUApp extends StatelessWidget {
             builder: (context) => NewsDetailScreen(newsId: newsId),
           );
         }
-        
+
         // Menü kategorisi sayfası
         if (settings.name == '/menu-category') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
             builder: (context) => const MenuCategoryScreen(),
-            settings: RouteSettings(
-              name: '/menu-category',
-              arguments: args,
-            ),
+            settings: RouteSettings(name: '/menu-category', arguments: args),
           );
         }
-        
+
         // Menü detay sayfası
         if (settings.name == '/menu-detail') {
           final args = settings.arguments as Map<String, dynamic>;
@@ -111,13 +108,10 @@ class IEUApp extends StatelessWidget {
               category: args['category'] ?? '',
               menuId: args['menuId'] ?? '',
             ),
-            settings: RouteSettings(
-              name: '/menu-detail',
-              arguments: args,
-            ),
+            settings: RouteSettings(name: '/menu-detail', arguments: args),
           );
         }
-        
+
         return null;
       },
     );
@@ -145,20 +139,20 @@ class _MainAppState extends State<MainApp> {
     try {
       // Initialize notification service
       await NotificationService.initialize();
-      
+
       // Initialize auth service and user
       await AuthService().initializeUser();
-      
+
       // Initialize badge service
       await BadgeService().initialize();
-      
+
       // UYGULAMA BAŞLATILDIĞINDA UNREAD COUNT GÜNCELLEMESİ
       await NotificationService.refreshUserNotifications();
-      
+
       // Get FCM token for debugging
       final token = await FirebaseMessaging.instance.getToken();
       print('FCM Token: $token');
-      
+
       setState(() {
         _isInitialized = true;
       });
@@ -177,18 +171,11 @@ class _MainAppState extends State<MainApp> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red,
-              ),
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
               const Text(
                 'Hata!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Padding(
@@ -217,11 +204,59 @@ class _MainAppState extends State<MainApp> {
     }
 
     if (!_isInitialized) {
-      return const SplashScreen(
-        child: NewHomeScreen(),
-      );
+      return const SplashScreen(child: NewHomeScreen());
     }
 
+    return const AppRootScreen();
+  }
+}
+
+class AppRootScreen extends StatefulWidget {
+  const AppRootScreen({super.key});
+
+  @override
+  State<AppRootScreen> createState() => _AppRootScreenState();
+}
+
+class _AppRootScreenState extends State<AppRootScreen>
+    with WidgetsBindingObserver {
+  late AuthService _authService;
+
+  @override
+  void initState() {
+    super.initState();
+    _authService = AuthService();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Uygulama ön plana geldiğinde auth durumunu kontrol et
+      setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print(
+      '🔍 AppRootScreen - isLoggedIn: ${_authService.isLoggedIn}, userType: ${_authService.userType}',
+    );
+
+    // Eğer öğrenci girişi yapmışsa student dashboard'a yönlendir
+    if (_authService.isLoggedIn) {
+      print('✅ Kullanıcı giriş yapmış, Student Dashboard gösteriliyor');
+      return const StudentDashboardScreen();
+    }
+
+    // Değilse ana ekranı göster
+    print('🏠 Kullanıcı giriş yapmamış, Ana ekran gösteriliyor');
     return const NewHomeScreen();
   }
 }

@@ -15,10 +15,15 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
   List<CourseSchedule> _courses = [];
   bool _isLoading = true;
   String? _error;
-  
+
   final List<String> _weekDays = [
-    'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 
-    'Cuma', 'Cumartesi', 'Pazar'
+    'Pazartesi',
+    'Salı',
+    'Çarşamba',
+    'Perşembe',
+    'Cuma',
+    'Cumartesi',
+    'Pazar',
   ];
 
   @override
@@ -73,20 +78,19 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
       appBar: AppBar(
         title: const Text(
           'Ders Programı',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryColor,
+        foregroundColor: Colors.white,
         elevation: 0,
         actions: [
           IconButton(
             onPressed: _loadCourseSchedule,
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Colors.white),
           ),
         ],
       ),
-      body: SafeArea(
-        child: _buildBody(),
-      ),
+      body: SafeArea(child: _buildBody()),
     );
   }
 
@@ -109,11 +113,7 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
               _error!,
@@ -135,11 +135,7 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.schedule_outlined,
-              size: 64,
-              color: Colors.grey,
-            ),
+            Icon(Icons.schedule_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text(
               'Henüz ders programınız bulunmuyor',
@@ -163,7 +159,7 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
 
   Widget _buildDaySection(String day) {
     final dayCourses = _courses.where((course) => course.day == day).toList();
-    
+
     if (dayCourses.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -175,7 +171,9 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: isToday ? Border.all(color: AppColors.primaryColor, width: 2) : null,
+        border: isToday
+            ? Border.all(color: AppColors.primaryColor, width: 2)
+            : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -217,7 +215,10 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
                 if (isToday) ...[
                   const Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -235,7 +236,7 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
               ],
             ),
           ),
-          
+
           // Courses for this day
           ...dayCourses.map((course) => _buildCourseCard(course, isToday)),
         ],
@@ -244,15 +245,18 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
   }
 
   Widget _buildCourseCard(CourseSchedule course, bool isToday) {
-    final isCurrentTime = isToday && _isCurrentTime(course.startTime, course.endTime);
-    
+    final isCurrentTime =
+        isToday && _isCurrentTime(course.startTime, course.endTime);
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isCurrentTime ? Colors.green.shade50 : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(8),
-        border: isCurrentTime ? Border.all(color: Colors.green, width: 2) : null,
+        border: isCurrentTime
+            ? Border.all(color: Colors.green, width: 2)
+            : null,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,7 +265,10 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: isCurrentTime ? Colors.green : AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(20),
@@ -278,7 +285,10 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
               if (isCurrentTime) ...[
                 const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.green,
                     borderRadius: BorderRadius.circular(12),
@@ -295,9 +305,9 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
               ],
             ],
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Course info
           Text(
             course.courseCode,
@@ -310,22 +320,15 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
           const SizedBox(height: 4),
           Text(
             course.courseName,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
-            ),
+            style: const TextStyle(fontSize: 14, color: Colors.grey),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // Location
           Row(
             children: [
-              const Icon(
-                Icons.location_on,
-                size: 16,
-                color: Colors.grey,
-              ),
+              const Icon(Icons.location_on, size: 16, color: Colors.grey),
               const SizedBox(width: 4),
               Text(
                 course.classroom,
@@ -337,7 +340,7 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
               ),
             ],
           ),
-          
+
           // Duration
           const SizedBox(height: 8),
           Container(
@@ -348,10 +351,7 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
             ),
             child: Text(
               _getCourseDuration(course.startTime, course.endTime),
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ),
         ],
@@ -376,11 +376,11 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
         hour: int.parse(endTime.split(':')[0]),
         minute: int.parse(endTime.split(':')[1]),
       );
-      
+
       final nowMinutes = now.hour * 60 + now.minute;
       final startMinutes = start.hour * 60 + start.minute;
       final endMinutes = end.hour * 60 + end.minute;
-      
+
       return nowMinutes >= startMinutes && nowMinutes <= endMinutes;
     } catch (e) {
       return false;
@@ -418,14 +418,14 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
         hour: int.parse(endTime.split(':')[0]),
         minute: int.parse(endTime.split(':')[1]),
       );
-      
+
       final startMinutes = start.hour * 60 + start.minute;
       final endMinutes = end.hour * 60 + end.minute;
       final durationMinutes = endMinutes - startMinutes;
-      
+
       final hours = durationMinutes ~/ 60;
       final minutes = durationMinutes % 60;
-      
+
       if (hours > 0) {
         return '$hours saat ${minutes > 0 ? '$minutes dakika' : ''}';
       } else {

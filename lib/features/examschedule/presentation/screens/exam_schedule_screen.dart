@@ -64,20 +64,19 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
       appBar: AppBar(
         title: const Text(
           'Sınav Programı',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.primaryColor,
+        foregroundColor: Colors.white,
         elevation: 0,
         actions: [
           IconButton(
             onPressed: _loadExamSchedule,
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Colors.white),
           ),
         ],
       ),
-      body: SafeArea(
-        child: _buildBody(),
-      ),
+      body: SafeArea(child: _buildBody()),
     );
   }
 
@@ -100,11 +99,7 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(
               _error!,
@@ -126,11 +121,7 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.assignment_outlined,
-              size: 64,
-              color: Colors.grey,
-            ),
+            Icon(Icons.assignment_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text(
               'Henüz sınav programınız bulunmuyor',
@@ -156,11 +147,13 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
 
   Widget _buildExamCard(ExamSchedule exam) {
     final isUpcoming = exam.examDateTime.isAfter(DateTime.now());
-    final isPast = exam.examDateTime.isBefore(DateTime.now().subtract(const Duration(days: 1)));
-    
+    final isPast = exam.examDateTime.isBefore(
+      DateTime.now().subtract(const Duration(days: 1)),
+    );
+
     Color cardColor = Colors.white;
     Color borderColor = AppColors.primaryColor;
-    
+
     if (exam.isCancelled) {
       cardColor = Colors.red.shade50;
       borderColor = Colors.red;
@@ -195,7 +188,10 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: borderColor,
                     borderRadius: BorderRadius.circular(20),
@@ -212,7 +208,10 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
                 const Spacer(),
                 if (exam.isCancelled)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(12),
@@ -228,9 +227,9 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
                   ),
               ],
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Course info
             Text(
               exam.courseCode,
@@ -243,21 +242,22 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
             const SizedBox(height: 4),
             Text(
               exam.courseName,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Exam details
-            _buildDetailRow(Icons.access_time, 'Saat', '${exam.startTime} - ${exam.endTime}'),
+            _buildDetailRow(
+              Icons.access_time,
+              'Saat',
+              '${exam.startTime} - ${exam.endTime}',
+            ),
             const SizedBox(height: 8),
             _buildDetailRow(Icons.location_on, 'Yer', exam.examLocation),
             const SizedBox(height: 8),
             _buildDetailRow(Icons.person, 'Öğretim Üyesi', exam.instructorName),
-            
+
             // Duration indicator
             const SizedBox(height: 12),
             Container(
@@ -268,10 +268,7 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
               ),
               child: Text(
                 _getExamDuration(exam.startTime, exam.endTime),
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ),
           ],
@@ -283,11 +280,7 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 16,
-          color: Colors.grey,
-        ),
+        Icon(icon, size: 16, color: Colors.grey),
         const SizedBox(width: 8),
         Text(
           '$label: ',
@@ -321,14 +314,14 @@ class _ExamScheduleScreenState extends State<ExamScheduleScreen> {
         hour: int.parse(endTime.split(':')[0]),
         minute: int.parse(endTime.split(':')[1]),
       );
-      
+
       final startMinutes = start.hour * 60 + start.minute;
       final endMinutes = end.hour * 60 + end.minute;
       final durationMinutes = endMinutes - startMinutes;
-      
+
       final hours = durationMinutes ~/ 60;
       final minutes = durationMinutes % 60;
-      
+
       if (hours > 0) {
         return '$hours saat ${minutes > 0 ? '$minutes dakika' : ''}';
       } else {
