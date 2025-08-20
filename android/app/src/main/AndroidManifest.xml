@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Internet permission for Firebase and WebView -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    
     <application
         android:label="IEU"
         android:name="${applicationName}"
