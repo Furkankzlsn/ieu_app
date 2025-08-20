@@ -399,7 +399,14 @@ class _NewHomeScreenState extends State<NewHomeScreen>
                   'Sisteme giriş yap',
                   Icons.login,
                   AppColors.successColor,
-                  () => Navigator.pushNamed(context, '/profile'),
+                  () {
+                    // Eğer zaten öğrenci girişi yapmışsa student dashboard'a git
+                    if (_authService.isLoggedIn) {
+                      Navigator.pushNamed(context, '/student-dashboard');
+                    } else {
+                      Navigator.pushNamed(context, '/profile');
+                    }
+                  },
                 ),
               ),
             ],

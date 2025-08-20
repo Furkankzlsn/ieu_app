@@ -15,6 +15,13 @@ class UserModel {
   final Map<String, bool> readNotifications;  // read içindeki bildirim ID'leri
   final Map<String, bool> deletedNotifications; // delete içindeki bildirim ID'leri
   final int unreadCount; // okunmamış bildirim sayısı
+  // Öğrenci bilgileri
+  final String? studentNumber;
+  final String? tck;
+  final String? department;
+  final String? faculty;
+  final int? grade;
+  final int? enrollmentYear;
 
   UserModel({
     required this.id,
@@ -29,6 +36,12 @@ class UserModel {
     this.readNotifications = const {},
     this.deletedNotifications = const {},
     this.unreadCount = 0,
+    this.studentNumber,
+    this.tck,
+    this.department,
+    this.faculty,
+    this.grade,
+    this.enrollmentYear,
   });
 
   factory UserModel.fromMap(String id, Map<String, dynamic> map) {
@@ -59,6 +72,13 @@ class UserModel {
           ? Map<String, bool>.from(map['notifications']['delete'])
           : {},
       unreadCount: map['notifications']?['unread_count'] ?? 0,
+      // Öğrenci bilgileri
+      studentNumber: map['studentNumber']?.toString(),
+      tck: map['tck']?.toString(),
+      department: map['department']?.toString(),
+      faculty: map['faculty']?.toString(),
+      grade: map['grade'] != null ? int.tryParse(map['grade'].toString()) : null,
+      enrollmentYear: map['enrollmentYear'] != null ? int.tryParse(map['enrollmentYear'].toString()) : null,
     );
   }
 
@@ -77,6 +97,12 @@ class UserModel {
         'delete': deletedNotifications,
         'unread_count': unreadCount,
       },
+      'studentNumber': studentNumber,
+      'tck': tck,
+      'department': department,
+      'faculty': faculty,
+      'grade': grade?.toString(),
+      'enrollmentYear': enrollmentYear?.toString(),
     };
   }
 
@@ -208,15 +234,9 @@ class UserModel {
   }
 
   // Getters for missing properties
-  String get userType => 'student'; // Default type
-  String get userTypeString => 'Öğrenci';
-  String get studentNumber => '';
-  String get department => '';
-  String get faculty => '';
-  String get gradeString => '';
-  int get grade => 1;
-  int get enrollmentYear => DateTime.now().year;
+  String get userType => isAnonymous ? 'anonymous' : 'student';
+  String get userTypeString => isAnonymous ? 'Misafir' : 'Öğrenci';
   int get age => 20;
-  bool get isStudent => true;
+  bool get isStudent => !isAnonymous;
   Map<String, dynamic> get notificationStatus => {};
 }

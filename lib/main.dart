@@ -18,6 +18,9 @@ import 'features/slider/presentation/screens/slider_detail_screen.dart';
 import 'features/news/presentation/screens/news_detail_screen.dart';
 import 'features/menu/presentation/screens/menu_category_screen.dart';
 import 'features/menu/presentation/screens/menu_detail_screen.dart';
+import 'features/student/presentation/screens/student_dashboard_screen.dart';
+import 'features/examschedule/presentation/screens/exam_schedule_screen.dart';
+import 'features/courseschedule/presentation/screens/course_schedule_screen.dart';
 
 // Top-level function for background message handling
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -66,6 +69,10 @@ class IEUApp extends StatelessWidget {
         '/announcements': (context) => const AnnouncementsScreen(),
         '/all-announcements': (context) => const AllAnnouncementsScreen(),
         '/profile': (context) => const ProfileScreen(),
+        '/dashboard': (context) => const NewHomeScreen(),
+        '/student-dashboard': (context) => const StudentDashboardScreen(),
+        '/exam-schedule': (context) => const ExamScheduleScreen(),
+        '/course-schedule': (context) => const CourseScheduleScreen(),
       },
       onGenerateRoute: (settings) {
         // Slider detay sayfası

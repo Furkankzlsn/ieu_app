@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:io';
 import '../models/user_model.dart';
 import '../core/constants/app_constants.dart';
+import 'api_service.dart';
 
 enum UserType { anonymous, student }
 
@@ -186,7 +187,7 @@ class AuthService {
     }
   }
 
-  /// Öğrenci girişi (test amaçlı)
+  /// Öğrenci girişi (API ile)
   Future<bool> loginAsStudent({
     required String studentNumber,
     required String password,
@@ -194,9 +195,21 @@ class AuthService {
     try {
       print('🔐 Öğrenci girişi deneniyor...');
 
-      // Basit test validasyonu (sonradan gerçek API ile değişecek)
-      if (!_validateStudentCredentials(studentNumber, password)) {
-        throw Exception('Öğrenci numarası veya şifre hatalı');
+      // Şifre kontrolü (şimdilik basit)
+      if (studentNumber.isEmpty || password.isEmpty) {
+        throw Exception('Lütfen tüm alanları doldurunuz');
+      }
+
+      // API'den öğrenci kontrolü yap
+      final ApiService apiService = ApiService.instance;
+      final response = await apiService.loginControl(studentNumber);
+
+      if (!response.success) {
+        throw Exception(response.error ?? 'Öğrenci kontrolü başarısız');
+      }
+
+      if (!response.data!.isActive) {
+        throw Exception('Öğrenci aktif öğrenci listesinde bulunamadı');
       }
 
       // Mevcut anonymous kullanıcıyı temizle
@@ -204,8 +217,8 @@ class AuthService {
         await _messaging.unsubscribeFromTopic('anonim');
       }
 
-      // Test öğrenci verisi oluştur
-      final studentData = _generateTestStudentData(studentNumber);
+      // API'den gelen verilerle öğrenci verisi oluştur
+      final studentData = _generateStudentDataFromApi(studentNumber, response.data!);
 
       // Email ile giriş yap (test amaçlı)
       final email = '${studentNumber}@ieu.edu.tr';
@@ -243,6 +256,11 @@ class AuthService {
         email: email,
         displayName: studentData['displayName']!,
         subscribedTopics: ['ieu_stu'],
+        studentNumber: studentData['studentNumber'],
+        tck: studentData['tck'],
+        department: studentData['department'],
+        grade: int.tryParse(studentData['grade'] ?? '1'),
+        enrollmentYear: int.tryParse(studentData['enrollmentYear'] ?? DateTime.now().year.toString()),
       );
 
       // Veritabanına kaydet (sadece Firebase Auth başarılıysa)
@@ -313,6 +331,20 @@ class AuthService {
     } catch (e) {
       print('❌ Öğrenci kullanıcı yükleme hatası: $e');
     }
+  }
+
+  /// API'den gelen verilerle öğrenci verisi oluştur
+  Map<String, String> _generateStudentDataFromApi(String studentNumber, StudentData apiData) {
+    return {
+      'email': '${studentNumber}@student.ieu.edu.tr',
+      'password': 'ieu_student_2024', // Sabit şifre
+      'displayName': 'İEU Öğrenci ($studentNumber)',
+      'studentNumber': studentNumber,
+      'tck': apiData.tck,
+      'department': 'Bilinmiyor', // API'den gelmediği için varsayılan
+      'grade': '1',
+      'enrollmentYear': DateTime.now().year.toString(),
+    };
   }
 
   /// Test amaçlı basit credential validasyonu

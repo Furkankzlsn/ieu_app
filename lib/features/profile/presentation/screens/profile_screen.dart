@@ -298,9 +298,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                       setState(() => isLoading = false);
                       if (mounted && success) {
                         Navigator.of(context).pop();
-                        // Dashboard'ı yeniden yükle
+                        // Student Dashboard'a yönlendir
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/dashboard', 
+                          '/student-dashboard', 
                           (route) => false,
                         );
                       }

@@ -39,6 +39,7 @@ dependencies:
   intl: ^0.20.2
   device_info_plus: ^11.5.0
   package_info_plus: ^8.0.3
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:
