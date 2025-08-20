@@ -4,7 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'https://analytics.com/ieu_app666888/API';
+  static const String baseUrl = 'https://analytics.ieu.edu.tr/ieuapp666888/API';
   static const String secretKey = 'IEU_APP_SECRET_KEY_2024';
   
   static ApiService? _instance;
