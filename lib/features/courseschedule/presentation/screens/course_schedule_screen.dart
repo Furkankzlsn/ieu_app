@@ -3,6 +3,22 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../services/auth_service.dart';
 import '../../../../services/api_service.dart';
 
+class MergedCourseSchedule extends CourseSchedule {
+  final int periodCount;
+  final List<CourseSchedule> originalCourses;
+
+  MergedCourseSchedule({
+    required super.day,
+    required super.courseCode,
+    required super.courseName,
+    required super.startTime,
+    required super.endTime,
+    required super.classroom,
+    required this.periodCount,
+    required this.originalCourses,
+  });
+}
+
 class CourseScheduleScreen extends StatefulWidget {
   const CourseScheduleScreen({super.key});
 
@@ -55,6 +71,9 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
             if (dayComparison != 0) return dayComparison;
             return a.startTime.compareTo(b.startTime);
           });
+
+          // Ardışık dersleri birleştir
+          _courses = _mergeContinuousCourses(_courses);
           _isLoading = false;
         });
       } else {
@@ -68,6 +87,70 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
         _error = 'Bir hata oluştu: $e';
         _isLoading = false;
       });
+    }
+  }
+
+  List<CourseSchedule> _mergeContinuousCourses(List<CourseSchedule> courses) {
+    List<CourseSchedule> mergedCourses = [];
+
+    for (int i = 0; i < courses.length; i++) {
+      CourseSchedule currentCourse = courses[i];
+      List<CourseSchedule> consecutiveCourses = [currentCourse];
+
+      // Aynı ders kodu ve derslik için ardışık saatleri kontrol et
+      while (i + 1 < courses.length) {
+        CourseSchedule nextCourse = courses[i + 1];
+
+        // Aynı gün, aynı ders, aynı derslik ve ardışık saatler mi?
+        if (currentCourse.day == nextCourse.day &&
+            currentCourse.courseCode == nextCourse.courseCode &&
+            currentCourse.classroom == nextCourse.classroom &&
+            _areTimesConsecutive(currentCourse.endTime, nextCourse.startTime)) {
+          consecutiveCourses.add(nextCourse);
+          currentCourse = nextCourse; // Bir sonraki döngü için güncelle
+          i++; // İndeksi artır
+        } else {
+          break;
+        }
+      }
+
+      // Eğer birden fazla ardışık ders varsa birleştir
+      if (consecutiveCourses.length > 1) {
+        mergedCourses.add(
+          MergedCourseSchedule(
+            day: consecutiveCourses.first.day,
+            courseCode: consecutiveCourses.first.courseCode,
+            courseName: consecutiveCourses.first.courseName,
+            startTime: consecutiveCourses.first.startTime,
+            endTime: consecutiveCourses.last.endTime,
+            classroom: consecutiveCourses.first.classroom,
+            periodCount: consecutiveCourses.length,
+            originalCourses: consecutiveCourses,
+          ),
+        );
+      } else {
+        mergedCourses.add(currentCourse);
+      }
+    }
+
+    return mergedCourses;
+  }
+
+  bool _areTimesConsecutive(String endTime, String startTime) {
+    try {
+      // Saatleri dakikaya çevir
+      List<String> endParts = endTime.split(':');
+      List<String> startParts = startTime.split(':');
+
+      int endMinutes = int.parse(endParts[0]) * 60 + int.parse(endParts[1]);
+      int startMinutes =
+          int.parse(startParts[0]) * 60 + int.parse(startParts[1]);
+
+      // 15 dakika veya daha az ara varsa ardışık kabul et
+      return (startMinutes - endMinutes) <= 15 &&
+          (startMinutes - endMinutes) >= 0;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -309,18 +392,54 @@ class _CourseScheduleScreenState extends State<CourseScheduleScreen> {
           const SizedBox(height: 12),
 
           // Course info
-          Text(
-            course.courseCode,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textColor,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            course.courseName,
-            style: const TextStyle(fontSize: 14, color: Colors.grey),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      course.courseCode,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textColor,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      course.courseName,
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+              // Period count for merged courses
+              if (course is MergedCourseSchedule && course.periodCount > 1) ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.primaryColor.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Text(
+                    '${course.periodCount} Ders',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
 
           const SizedBox(height: 8),
